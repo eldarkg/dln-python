@@ -18,6 +18,13 @@ import struct
 
 import result
 
+MSG_HEADER_FMT = '<HHHH'
+BASIC_RSP_FMT = MSG_HEADER_FMT + 'H'    # header + result
+BASIC_CMD_FMT = MSG_HEADER_FMT
+
+StructMsgHeader = struct.Struct(MSG_HEADER_FMT)
+StructBasicRsp = struct.Struct(BASIC_RSP_FMT)
+StructBasicCmd = struct.Struct(BASIC_CMD_FMT)
 
 HANDLE_ALL_DEVICES = 0
 HANDLE_INVALID = 0xFFFF
@@ -46,7 +53,6 @@ MODULE_ANALYZER = 0x14
 
 MSG_MODULE_POS = 8
 
-MSG_HEADER_LEN = 8
 MSG_RESULT_LEN = 2
 
 def build_msg_id(id, module):
@@ -82,10 +88,10 @@ MSG_ID_DELAY = build_msg_id(0x42, MODULE_GENERIC)
 MSG_ID_RESTART = build_msg_id(0x43, MODULE_GENERIC)
 
 def build_msg_header(size, msg_id, echo_cnt, handle):
-    return struct.pack('<HHHH', size, msg_id, echo_cnt, handle)
+    return StructMsgHeader.pack(size, msg_id, echo_cnt, handle)
 
 def check_response(cmd, rsp):
-    (size, msg_id, echo_cnt, handle, res) = struct.unpack_from('<HHHHH', rsp)
+    (size, msg_id, echo_cnt, handle, res) = StructBasicRsp.unpack_from(rsp)
     #TODO check cmd and rsp field
     if not result.issucceeded(res):
         raise Exception(str(result.Result(res)))

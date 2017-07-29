@@ -81,12 +81,14 @@ class Device:
         ...
 
     def get_server_version(self):
-        cmd = build_msg_header(MSG_HEADER_LEN, MSG_ID_GET_SERVER_VERSION, 0,
-                               self._handle)
-        size = MSG_HEADER_LEN + MSG_RESULT_LEN + 4
-        rsp = self._client.transaction(cmd, size)
+        cmd = build_msg_header(StructBasicCmd.size, MSG_ID_GET_SERVER_VERSION,
+                               0, self._handle)
+
+        sdata = struct.Struct('<I')
+        rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size)
         check_response(cmd, rsp)
-        return struct.unpack_from('<I', rsp, MSG_HEADER_LEN + MSG_RESULT_LEN)[0]
+
+        return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
 
     def get_library_version(self):
         ...
@@ -101,6 +103,7 @@ class Device:
         \retval DLN_RES_SUCCESS - The pin configuration is successfully retrieved.
         \retval DLN_RES_INVALID_PIN_NUMBER - An invalid pin number has been specified.
         '''
+        ...
 
     def get_command_restriction(self, msgId, entity):
         ...
