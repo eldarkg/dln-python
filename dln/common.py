@@ -88,5 +88,5 @@ def check_response(cmd, rsp):
     (size, msg_id, echo_cnt, handle, res) = struct.unpack_from('<HHHHH', rsp)
     #TODO check cmd and rsp field
     if not result.issucceeded(res):
-        raise Exception
+        raise Exception(str(result.Result(res)))
     #TODO check result and generate informative exception
