@@ -22,8 +22,8 @@ Client generic interface
 import socket
 import struct
 
-from common import *
-from device import Device
+from .common import *
+from .device import Device
 
 
 DEFAULT_SERVER_PORT = 9656

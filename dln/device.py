@@ -20,7 +20,8 @@ Supported Products: DLN-1, DLN-2, DL-4M, DLN-4S
 
 
 import struct
-from common import *
+
+from .common import *
 
 
 #class Device(SpiMaster):

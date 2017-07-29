@@ -16,7 +16,7 @@
 
 import struct
 
-import result
+from . import result
 
 MSG_HEADER_FMT = '<HHHH'
 BASIC_RSP_FMT = MSG_HEADER_FMT + 'H'    # header + result
