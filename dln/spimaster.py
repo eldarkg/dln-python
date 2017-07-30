@@ -223,25 +223,30 @@ class SpiMaster:
         '''
         ...
 
-    def set_frame_size(self, port, frame_size):
+    def set_frame_size(self, port, size):
         '''
         Sets the size of a single SPI data frame.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be configured.
-        frameSize - a number of bits to be transferred in a single frame.
+        port: the number of an SPI master port to be configured;
+        size: a number of bits to be transferred in a single frame.
+        Return:
         Result.SUCCESS - the SPI master port frame size has been successfully set.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.SPI_INVALID_FRAME_SIZE - the frame size is out of range.
         Result.BUSY - the SPI master is busy transferring.
         '''
-        ...
+        sdata = struct.Struct('<BB')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SET_FRAME_SIZE, 0, self._handle)
+        cmd += sdata.pack(port, size)
 
-    def get_frame_size(self, port, frame_size):
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
+
+    def get_frame_size(self, port, size):
         '''
         Retrieves current size setting for SPI data frames.
-        handle - a handle to the DLN-series adapter.
-         port - the number of an SPI master port to retrieve the information from.
-        frameSize - a number of bits to be transferred in a single frame.
+        port: the number of an SPI master port to retrieve the information from.
+        Return: a number of bits to be transferred in a single frame.
         Result.SUCCESS - the SPI master port frame size has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
