@@ -42,14 +42,14 @@ class Client:
         \param handle - A handle to the DLN device.
         \param notification - Defines the notification settings.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def unregister_notification(self, handle):
         '''
         Unregisters notification settings.
         \param handle - A handle to the DLN device.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def connect(self, host, port):
         '''
@@ -76,14 +76,14 @@ class Client:
         \retval Result.SUCCESS - connections to all servers were successfully closed:
         \retval Result.NOT_CONNECTED - no connections were present during the command execution.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def cleanup(self):
         '''
         Closes all connections and frees the resources used.
         \retval Result.SUCCESS
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_device_count(self):
         '''
@@ -147,13 +147,13 @@ class Client:
         Closes the handle to an opened DLN device (self, stream).
         handle: a handle to the DLN device.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def close_all_handles(self):
         '''
         Closes handles to all opened DLN devices and streams.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def send_message(self, msg):
         '''

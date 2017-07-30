@@ -182,7 +182,7 @@ class SpiMaster:
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.TRANSFER_CANCELLED - the pending transfers were cancelled.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def isenabled(self, port, enabled):
         '''
@@ -194,7 +194,7 @@ class SpiMaster:
         Result.SUCCESS - the SPI master port state has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def set_mode(self, port, mode):
         '''
@@ -223,7 +223,7 @@ class SpiMaster:
         Result.SUCCESS - the SPI master port mode has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def set_frame_size(self, port, size):
         '''
@@ -253,7 +253,7 @@ class SpiMaster:
         Result.SUCCESS - the SPI master port frame size has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def set_frequency(self, port, freq):
         '''
@@ -288,7 +288,7 @@ class SpiMaster:
         Result.SUCCESS - the SPI master port frequency has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def _check_transfer_size(self, size):
         if SpiMaster.MAX_TRANSFER_SIZE < size:
@@ -391,7 +391,7 @@ class SpiMaster:
         Result.BUSY - the SPI master is busy transferring.
         Result.VALUE_ROUNDED - the delay value has been approximated as the closest supported value.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_delay_between_ss(self, port, delay_between_ss):
         '''
@@ -402,7 +402,7 @@ class SpiMaster:
         Result.SUCCESS - the delay has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def set_delay_after_ss(self, port, delay_after_ss, actual_delay_after_ss):
         '''
@@ -416,7 +416,7 @@ class SpiMaster:
         Result.BUSY - the SPI master is busy transferring.
         Result.VALUE_ROUNDED - the delay value has been approximated as the closest supported value.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_delay_after_ss(self, port, delay_after_ss):
         '''
@@ -427,7 +427,7 @@ class SpiMaster:
         Result.SUCCESS - the delay has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def set_delay_between_frames(self, port, delay_between_frames, actual_delay_between_frames):
         '''
@@ -441,7 +441,7 @@ class SpiMaster:
         Result.BUSY - the SPI master is busy transferring.
         Result.VALUE_ROUNDED - the delay value has been approximated as the closest supported value.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_delay_between_frames(self, port, delay_between_frames):
         '''
@@ -452,7 +452,7 @@ class SpiMaster:
         Result.SUCCESS - the delay has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def set_ss(self, port, ss):
         '''
@@ -465,7 +465,7 @@ class SpiMaster:
         Result.BUSY - the SPI master port is busy transferring.
         Result.SPI_MASTER_INVALID_SS_NUMBER - the SS value is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_ss(self, port, ss):
         '''
@@ -476,19 +476,19 @@ class SpiMaster:
         Result.SUCCESS - the slave select has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def release_ss(self, port):
-        ...
+        raise Exception("Not implemented")
 
     def ss_variable_enable(self, port):
-        ...
+        raise Exception("Not implemented")
 
     def ss_variable_disable(self, port):
-        ...
+        raise Exception("Not implemented")
 
     def ss_variable_isenabled(self, port, enabled):
-        ...
+        raise Exception("Not implemented")
 
     def ss_between_frames_enable(self, port):
         '''
@@ -499,7 +499,7 @@ class SpiMaster:
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master port is busy transferring.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def ss_between_frames_disable(self, port):
         '''
@@ -510,7 +510,7 @@ class SpiMaster:
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master port is busy transferring.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def ss_between_frames_isenabled(self, port, enabled):
         '''
@@ -521,49 +521,49 @@ class SpiMaster:
         Result.SUCCESS - the SS between frames state has been successfully retrieved.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def set_cpha(self, port, cpha):
-        ...
+        raise Exception("Not implemented")
 
     def get_cpha(self, port, cpha):
-        ...
+        raise Exception("Not implemented")
 
     def set_cpol(self, port, cpol):
-        ...
+        raise Exception("Not implemented")
 
     def get_cpol(self, port, cpol):
-        ...
+        raise Exception("Not implemented")
 
     def get_supported_modes(self, port, values):
-        ...
+        raise Exception("Not implemented")
 
     def get_supported_cpha_values(self, port, values):
-        ...
+        raise Exception("Not implemented")
 
     def get_supported_cpol_values(self, port, values):
-        ...
+        raise Exception("Not implemented")
 
     def get_supported_frame_sizes(self, port, supported_sizes):
-        ...
+        raise Exception("Not implemented")
 
     def get_ss_count(self, port, count):
-        ...
+        raise Exception("Not implemented")
 
     def ss_multi_enable(self, port, ss_mask):
-        ...
+        raise Exception("Not implemented")
 
     def ss_multi_disable(self, port, ss_mask):
-        ...
+        raise Exception("Not implemented")
 
     def ss_multi_isenabled(self, port, enabled):
-        ...
+        raise Exception("Not implemented")
 
     def ss_enable(self, port, ss):
-        ...
+        raise Exception("Not implemented")
 
     def ss_disable(self, port, ss):
-        ...
+        raise Exception("Not implemented")
 
     def ss_isenabled(self, port, ss, enabled):
-        ...
+        raise Exception("Not implemented")

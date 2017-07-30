@@ -36,35 +36,35 @@ class Device:
         '''
         Retrieves the DLN device and software version data.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_device_sn(self):
         '''
         Retrieves the device serial number.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def set_device_id(self, id):
         '''
         Sets a new ID number to the DLN device.
         id: an ID number to be set.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_device_id(self):
         '''
         Retrieves the device ID number.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_hardware_type(self):
-        ...
+        raise Exception("Not implemented")
 
     def get_hardware_version(self):
-        ...
+        raise Exception("Not implemented")
 
     def get_firmware_version(self):
-        ...
+        raise Exception("Not implemented")
 
     def get_server_version(self):
         cmd = build_msg_header(StructBasicCmd.size, MSG_ID_GET_SERVER_VERSION,
@@ -76,7 +76,7 @@ class Device:
         return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
 
     def get_library_version(self):
-        ...
+        raise Exception("Not implemented")
 
     def get_pin_cfg(self, pin):
         '''
@@ -86,13 +86,13 @@ class Device:
         Result.SUCCESS - the pin configuration is successfully retrieved.
         Result.INVALID_PIN_NUMBER - an invalid pin number has been specified.
         '''
-        ...
+        raise Exception("Not implemented")
 
     def get_command_restriction(self, msgId, entity):
-        ...
+        raise Exception("Not implemented")
 
     def delay(self, delay):
-        ...
+        raise Exception("Not implemented")
 
     def restart(self):
-        ...
+        raise Exception("Not implemented")
