@@ -229,7 +229,8 @@ class SpiMaster:
         port: the number of an SPI master port to be configured;
         size: a number of bits to be transferred in a single frame.
         Return:
-        Result.SUCCESS - the SPI master port frame size has been successfully set.
+        Result.SUCCESS - the SPI master port frame size has been successfully
+        set.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.SPI_INVALID_FRAME_SIZE - the frame size is out of range.
         Result.BUSY - the SPI master is busy transferring.
@@ -252,21 +253,29 @@ class SpiMaster:
         '''
         ...
 
-    def set_frequency(self, port, frequency, actual_frequency):
+    def set_frequency(self, port, freq):
         '''
         Sets  the clock  frequency  on  the SCLK  line.
-        actualFrequency can be NULL
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be configured.
-        frequency - sCLK line frequency value, specified in Hz.
-        actualFrequency - a pointer to an unsigned 32-bit integer.
-        This integer will be filled with the frequency approximated as the closest to user-defined lower value.
-        Result.SUCCESS - the SPI master port frequency has been successfully set.
+        port: the number of an SPI master port to be configured;
+        freq: sCLK line frequency value, specified in Hz.
+        Return: a frequency approximated as the closest to user-defined lower
+        value in Hz.
+        Result.SUCCESS - the SPI master port frequency has been successfully
+        set.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master is busy transferring.
-        Result.VALUE_ROUNDED - the frequency value has been approximated as the closest supported value.
+        Result.VALUE_ROUNDED - the frequency value has been approximated as the
+        closest supported value.
         '''
-        ...
+        sdata = struct.Struct('<BI')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SET_FREQUENCY, 0, self._handle)
+        cmd += sdata.pack(port, freq)
+
+        sdata = struct.Struct('<I')
+        rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size)
+        check_response(cmd, rsp)
+        return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
 
     def get_frequency(self, port, frequency):
         '''
