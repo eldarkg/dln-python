@@ -18,6 +18,7 @@ SPI master
 '''
 
 
+from array import array
 import struct
 
 from .common import *
@@ -357,24 +358,26 @@ class SpiMaster:
 
         sdata = struct.Struct('<H')
         rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size +
-                                            size)
+                                       size)
         check_response(cmd, rsp)
         #TODO read from size field
         return rsp[StructBasicRsp.size + sdata.size:]
 
-    def read_write16(self, port, count, write_buffer, read_buffer):
+    def read_write_16(self, port, frames):
         '''
         Sends and receives 2-byte frames via SPI.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port.
-        count - the number of 2-byte array elements.
-        writeBuffer - a pointer to an unsigned 16-bit integer. This integer will be filled with data to be transferred from master to slave after the function execution.
-        readBuffer - a pointer to an unsigned 16-bit integer. This integer will be filled with data to be transferred from slave to master after the function execution.
-        Result.SUCCESS - the SPI master port transaction has been successfully performed.
+        port: the number of an SPI master port;
+        frames: a data to be transferred from master to slave after the function
+        execution.
+        Return: a data to be transferred from slave to master after the function
+        execution.
+        Result.SUCCESS - the SPI master port transaction has been successfully
+        performed.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.DISABLED - the SPI master port is disabled.
         '''
-        ...
+        buffer = bytes(array('H', frames))
+        return self.read_write(port, buffer)
 
     def set_delay_between_ss(self, port, delay_between_ss, actual_delay_between_ss):
         '''
