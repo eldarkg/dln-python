@@ -57,8 +57,8 @@ class Client:
         host: a server to establish the connection to;
         port: a port number of the DLN server.
         Return:
-            Result.INSUFFICIENT_RESOURCES;
-            Result.SOCKET_INITIALIZATION_FAILED.
+        Result.INSUFFICIENT_RESOURCES;
+        Result.SOCKET_INITIALIZATION_FAILED.
         '''
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.connect((host, port))
@@ -114,12 +114,12 @@ class Client:
         '''
         Opens the specified device corresponding to the specified number.
         number: a number of the device to be opened.
-        Return:
-            Result.SUCCESS - The device was successfully opened;
-            Result.NOT_CONNECTED - The library was not connected to any server;
-            Result.MEMORY_ERROR - Not enough memory to process this command;
-            Result.HARDWARE_NOT_FOUND - The number of available devices is less than deviceNumber+1;
-            Result.DEVICE_REMOVED - The device was disconnected while opening.
+        Return: a handle to the DLN device.
+        Result.SUCCESS - The device was successfully opened;
+        Result.NOT_CONNECTED - The library was not connected to any server;
+        Result.MEMORY_ERROR - Not enough memory to process this command;
+        Result.HARDWARE_NOT_FOUND - The number of available devices is less than deviceNumber+1;
+        Result.DEVICE_REMOVED - The device was disconnected while opening.
         '''
         return self._open_device_common(_DEVICE_FILTER_NUMBER, number)
 
@@ -127,6 +127,7 @@ class Client:
         '''
         Opens a specified defined by its serial number.
         sn: a serial number of the DLN device.
+        Return: a handle to the DLN device.
         '''
         return self._open_device_common(_DEVICE_FILTER_SN, sn)
 
@@ -134,6 +135,7 @@ class Client:
         '''
         Opens a specified defined by its ID number.
         id: an ID number of the DLN device.
+        Return: a handle to the DLN device.
         '''
         return self._open_device_common(_DEVICE_FILTER_ID, id)
 
@@ -166,6 +168,7 @@ class Client:
         response details.
         cmd: a pointer to a variable that contains a command to be sent;
         size: the maximum number of bytes to be retrieved.
+        Return: a response.
         '''
         self._socket.sendall(cmd)
         return self._socket.recv(size)
@@ -175,6 +178,7 @@ class Client:
         Retrieves a message (self, response or event) sent by the device.
         handle: a handle to the the DLN device;
         size: the maximum number of bytes to be retrieved.
+        Return: a message.
         '''
         #TODO check in queue ?!
         msg = self._socket.recv(size)

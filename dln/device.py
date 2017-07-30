@@ -35,32 +35,25 @@ class Device:
     def get_version(self):
         '''
         Retrieves the DLN device and software version data.
-        \param handle - A handle to the DLN device.
-        \param version - A pointer to a DLN_VERSION structure that receives version information after the function execution.
         '''
         ...
 
     def get_device_sn(self):
         '''
         Retrieves the device serial number.
-        \param handle - A handle to the DLN device.
-        \param sn - A pointer to the variable that receives the device serial number after the function execution.
         '''
         ...
 
     def set_device_id(self, id):
         '''
         Sets a new ID number to the DLN device.
-        \param handle - A handle to the DLN device.
-        \param id - An ID number to be set.
+        id: an ID number to be set.
         '''
         ...
 
     def get_device_id(self):
         '''
         Retrieves the device ID number.
-        \param handle - A handle to the DLN device.
-        \param id - A pointer to an unsigned 32-bit integer. This integer will be filled with the ID number after the function execution.
         '''
         ...
 
@@ -80,7 +73,6 @@ class Device:
         sdata = struct.Struct('<I')
         rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size)
         check_response(cmd, rsp)
-
         return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
 
     def get_library_version(self):
@@ -89,12 +81,10 @@ class Device:
     def get_pin_cfg(self, pin):
         '''
         Retrieves current configuration of the specified DLN device pin.
-        \param handle - A handle to the DLN device.
-        \param pin - A pin to get the configuration from.
-        \param cfg - A pointer to the DLN_PIN_CONFIG structure which will be filled with the configuration after function execution.
-
-        \retval DLN_RES_SUCCESS - The pin configuration is successfully retrieved.
-        \retval DLN_RES_INVALID_PIN_NUMBER - An invalid pin number has been specified.
+        pin: a pin to get the configuration from.
+        Return: a current pin configuration.
+        Result.SUCCESS - the pin configuration is successfully retrieved.
+        Result.INVALID_PIN_NUMBER - an invalid pin number has been specified.
         '''
         ...
 
