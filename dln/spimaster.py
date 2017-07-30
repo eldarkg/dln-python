@@ -85,6 +85,47 @@ _MSG_ID_GET_MAX_DELAY_BETWEEN_FRAMES = build_msg_id(0x4C, MODULE_SPI_MASTER)
 
 
 class SpiMaster:
+    # Enabled
+    ENABLED = 1
+    DISABLED = 0
+    # SPI disable
+    CANCEL_TRANSFERS = 0
+    WAIT_FOR_TRANSFERS = 1
+    # Mode: CPHA
+    MODE_CPHA_BIT = (1 << 0)
+    MODE_CPHA_0 = (0 << 0)
+    MODE_CPHA_1 = (1 << 0)
+    # Mode: CPOL
+    MODE_CPOL_BIT = (1 << 1)
+    MODE_CPOL_0 = (0 << 1)
+    MODE_CPOL_1 = (1 << 1)
+    # Transfer size
+    FRAME_SIZE_8 = 8
+    FRAME_SIZE_9 = 9
+    FRAME_SIZE_10 = 10
+    FRAME_SIZE_11 = 11
+    FRAME_SIZE_12 = 12
+    FRAME_SIZE_13 = 13
+    FRAME_SIZE_14 = 14
+    FRAME_SIZE_15 = 15
+    FRAME_SIZE_16 = 16
+    # SS control
+    SS_0 = 0xFE
+    SS_1 = 0xFD
+    SS_2 = 0xFB
+    SS_3 = 0xF7
+    SS_DECODE_ENABLED = 1
+    SS_DECODE_DISABLED = 0
+    SS_VARIABLE_ENABLED = 1
+    SS_VARIABLE_DISABLED = 0
+    SS_AAT_ENABLED = 1
+    SS_AAT_DISABLED = 0
+    SS_BETWEEN_FRAMES_ENABLED = 1
+    SS_BETWEEN_FRAMES_DISABLED = 0
+    # read_write_ex attributes
+    ATTR_LEAVE_SS_LOW = (1 << 0)
+    ATTR_RELEASE_SS = (0 << 0)
+
     def __init__(self, client, handle):
         self._client = client
         self._handle = handle
@@ -156,14 +197,20 @@ class SpiMaster:
     def set_mode(self, port, mode):
         '''
         Sets SPI transmission parameters
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to apply configuration to.
-        mode - a bit field describing the SPI master mode to be set.
+        port: the number of an SPI master port to apply configuration to;
+        mode: a bit field describing the SPI master mode to be set.
+        Return:
         Result.SUCCESS - the SPI master port mode has been successfully set.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master is busy transferring.
         '''
-        ...
+        sdata = struct.Struct('<BB')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SET_MODE, 0, self._handle)
+        cmd += sdata.pack(port, mode)
+
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
 
     def get_mode(self, port, mode):
         '''
