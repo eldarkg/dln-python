@@ -85,6 +85,7 @@ _MSG_ID_GET_MAX_DELAY_BETWEEN_FRAMES = build_msg_id(0x4C, MODULE_SPI_MASTER)
 
 
 class SpiMaster:
+    MAX_TRANSFER_SIZE = 256
     # Enabled
     ENABLED = 1
     DISABLED = 0
@@ -279,7 +280,7 @@ class SpiMaster:
 
     def get_frequency(self, port, frequency):
         '''
-         Retrieves current setting for SPI clock frequency.
+        Retrieves current setting for SPI clock frequency.
         handle - a handle to the DLN-series adapter.
         port - the number of an SPI master port to retrieve the information from.
         frequency - a pointer to an unsigned 32-bit integer. This integer will be filled with current SPI clock frequency after the function execution.
@@ -288,34 +289,78 @@ class SpiMaster:
         '''
         ...
 
-    def read_write(self, port, size, write_buffer, read_buffer):
+    def _check_transfer_size(self, size):
+        if SpiMaster.MAX_TRANSFER_SIZE < size:
+            raise Exception("Maximum transfer bytes should be {0}".
+                             format(SpiMaster.MAX_TRANSFER_SIZE))
+
+    def read_write(self, port, buffer):
         '''
-         Sends and receives data via SPI.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port.
-        size - the size of the message buffer.
-        writeBuffer - a pointer to an unsigned 8-bit integer. This integer will be filled with data to be transferred from master to slave after the function execution.
-        readBuffer - a pointer to an unsigned 8-bit integer. This integer will be filled with data to be transferred from slave to master after the function execution.
-        Result.SUCCESS - the SPI master port transaction has been successfully performed.
+        Sends and receives data via SPI.
+        port: the number of an SPI master port.
+        size: the size of the message buffer.
+        buffer: a data to be transferred from master to slave after the function
+        execution.
+        Return: a data to be transferred from slave to master after the function
+        execution.
+        Result.SUCCESS - the SPI master port transaction has been successfully
+        performed.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.DISABLED - the SPI master port is disabled.
         '''
-        ...
+        return self.read_write_ex(port, buffer, self.ATTR_LEAVE_SS_LOW)
 
-    def read_write_ex(self, port, size, write_buffer, read_buffer, attribute):
-        ...
+    def read_write_ex(self, port, buffer, attr):
+        self._check_transfer_size(len(buffer))
 
-    def write(self, port, size, write_buffer):
-        ...
+        sdata = struct.Struct('<BHB')
+        #TODO check transfer size
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size + len(buffer),
+                               _MSG_ID_READ_WRITE, 0, self._handle)
+        cmd += sdata.pack(port, len(buffer), attr)
+        cmd += buffer
 
-    def write_ex(self, port, size, write_buffer, attribute):
-        ...
+        sdata = struct.Struct('<H')
+        rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size +
+                                       len(buffer))
+        check_response(cmd, rsp)
+        #TODO read from size field
+        return rsp[StructBasicRsp.size + sdata.size:]
 
-    def read(self, port, size, read_buffer):
-        ...
+    def write(self, port, buffer):
+        self.write_ex(port, buffer, self.ATTR_LEAVE_SS_LOW)
 
-    def read_ex(self, port, size, read_buffer, attribute):
-        ...
+    def write_ex(self, port, buffer, attr):
+        self._check_transfer_size(len(buffer))
+
+        sdata = struct.Struct('<BHB')
+        #TODO check transfer size
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size + len(buffer),
+                               _MSG_ID_WRITE, 0, self._handle)
+        cmd += sdata.pack(port, len(buffer), attr)
+        cmd += buffer
+
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
+
+    def read(self, port, size):
+        return self.read_ex(port, size, self.ATTR_LEAVE_SS_LOW)
+
+    def read_ex(self, port, size, attr):
+        self._check_transfer_size(size)
+
+        sdata = struct.Struct('<BHB')
+        #TODO check transfer size
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_READ, 0, self._handle)
+        cmd += sdata.pack(port, size, attr)
+
+        sdata = struct.Struct('<H')
+        rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size +
+                                            size)
+        check_response(cmd, rsp)
+        #TODO read from size field
+        return rsp[StructBasicRsp.size + sdata.size:]
 
     def read_write16(self, port, count, write_buffer, read_buffer):
         '''
