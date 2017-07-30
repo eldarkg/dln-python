@@ -96,6 +96,7 @@ class SpiMaster:
         '''
         Retrieves the total number of SPI master ports available in your
         DLN-series adapter.
+        Return: a port count.
         Result.SUCCESS - the port count has been successfully retrieved.
         '''
         cmd = build_msg_header(StructBasicCmd.size, _MSG_ID_GET_PORT_COUNT,
@@ -104,21 +105,29 @@ class SpiMaster:
         sdata = struct.Struct('<B')
         rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size)
         check_response(cmd, rsp)
-
         return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
 
-    def enable(self, port, conflict):
+    def enable(self, port):
         '''
-        Activates corresponding SPI master port on your DLN-series adapter
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be enabled as master.
-        conflict - a pointer to an unsigned 16-bit integer. This integer can be filled with a number of the conflicted pin.
+        Activates corresponding SPI master port on your DLN-series adapter.
+        port: the number of an SPI master port to be enabled as master.
+        Return: a number of the conflicted pin.
         Result.SUCCESS - the SPI master port has been successfully enabled.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
-        Result.PIN_IN_USE - the SPI pins are assigned to another module of the adapter and cannot be enabled as SPI.
-        Result.NO_FREE_DMA_CHANNEL - all DMA channels are assigned to another modules of the adapter.
+        Result.PIN_IN_USE - the SPI pins are assigned to another module of the
+        adapter and cannot be enabled as SPI.
+        Result.NO_FREE_DMA_CHANNEL - all DMA channels are assigned to another
+        modules of the adapter.
         '''
-        ...
+        sdata = struct.Struct('<B')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_ENABLE, 0, self._handle)
+        cmd += sdata.pack(port)
+
+        sdata = struct.Struct('<H')
+        rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size)
+        check_response(cmd, rsp)
+        return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
 
     def disable(self, port, wait_for_transfer_completion):
         '''
@@ -132,7 +141,7 @@ class SpiMaster:
         '''
         ...
 
-    def is_enabled(self, port, enabled):
+    def isenabled(self, port, enabled):
         '''
         Retrieves information whether the specified SPI master port is activated.
         handle - a handle to the DLN-series adapter.
@@ -369,7 +378,7 @@ class SpiMaster:
     def ss_variable_disable(self, port):
         ...
 
-    def ss_variable_is_enabled(self, port, enabled):
+    def ss_variable_isenabled(self, port, enabled):
         ...
 
     def ss_between_frames_enable(self, port):
@@ -394,7 +403,7 @@ class SpiMaster:
         '''
         ...
 
-    def ss_between_frames_is_enabled(self, port, enabled):
+    def ss_between_frames_isenabled(self, port, enabled):
         '''
         Retrieves information whether release of an SS line between data frames exchanged with a slave device is enabled.
         handle - a handle to the DLN-series adapter.
@@ -438,7 +447,7 @@ class SpiMaster:
     def ss_multi_disable(self, port, ss_mask):
         ...
 
-    def ss_multi_is_enabled(self, port, enabled):
+    def ss_multi_isenabled(self, port, enabled):
         ...
 
     def ss_enable(self, port, ss):
@@ -447,5 +456,5 @@ class SpiMaster:
     def ss_disable(self, port, ss):
         ...
 
-    def ss_is_enabled(self, port, ss, enabled):
+    def ss_isenabled(self, port, ss, enabled):
         ...
