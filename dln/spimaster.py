@@ -484,15 +484,21 @@ class SpiMaster:
     def set_ss(self, port, ss):
         '''
         Selects a Slave Select (self, SS) line.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be configured.
-        ss - an SS line to be activated.
+        port: the number of an SPI master port to be configured;
+        ss: an SS line to be activated.
+        Return:
         Result.SUCCESS - the slave select has been successfully set.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master port is busy transferring.
         Result.SPI_MASTER_INVALID_SS_NUMBER - the SS value is out of range.
         '''
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<BB')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SET_SS, 0, self._handle)
+        cmd += sdata.pack(port, ss)
+
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
 
     def get_ss(self, port, ss):
         '''
@@ -506,38 +512,72 @@ class SpiMaster:
         raise Exception("Not implemented")
 
     def release_ss(self, port):
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<B')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_RELEASE_SS, 0, self._handle)
+        cmd += sdata.pack(port)
+
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
 
     def ss_variable_enable(self, port):
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<B')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SS_VARIABLE_ENABLE, 0, self._handle)
+        cmd += sdata.pack(port)
+
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
 
     def ss_variable_disable(self, port):
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<B')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SS_VARIABLE_DISABLE, 0, self._handle)
+        cmd += sdata.pack(port)
+
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
 
     def ss_variable_isenabled(self, port, enabled):
         raise Exception("Not implemented")
 
     def ss_between_frames_enable(self, port):
         '''
-        Enables release of an SS line between data frames exchanged with a single slave device.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be configured.
+        Enables release of an SS line between data frames exchanged with a
+        single slave device.
+        port: the number of an SPI master port to be configured.
+        Return:
         Result.SUCCESS - the SS between frames has been successfully enabled.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master port is busy transferring.
         '''
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<B')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SS_BETWEEN_FRAMES_ENABLE,
+                               0, self._handle)
+        cmd += sdata.pack(port)
+
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
 
     def ss_between_frames_disable(self, port):
         '''
-        Disables release of an SS line between data frames exchanged with a single slave device.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be configured.
+        Disables release of an SS line between data frames exchanged with a
+        single slave device.
+        port: the number of an SPI master port to be configured.
+        Return:
         Result.SUCCESS - the SS between frames has been successfully disabled.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master port is busy transferring.
         '''
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<B')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SS_BETWEEN_FRAMES_DISABLE,
+                               0, self._handle)
+        cmd += sdata.pack(port)
+
+        rsp = self._client.transaction(cmd, StructBasicRsp.size)
+        check_response(cmd, rsp)
 
     def ss_between_frames_isenabled(self, port, enabled):
         '''
