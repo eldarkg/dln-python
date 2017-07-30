@@ -379,21 +379,30 @@ class SpiMaster:
         buffer = bytes(array('H', frames))
         return self.read_write(port, buffer)
 
-    def set_delay_between_ss(self, port, delay_between_ss, actual_delay_between_ss):
+    def set_delay_between_ss(self, port, delay):
         '''
-        Sets a minimum delay between release of an SS line and assertion of another SS line.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be configured.
-        delayBetweenSS - the delay value in nanoseconds.
-        actualDelayBetweenSS - actual set delay value in nanoseconds.
+        Sets a minimum delay between release of an SS line and assertion of
+        another SS line.
+        port: the number of an SPI master port to be configured;
+        delay: the delay value in nanoseconds.
+        Return: actual set delay value in nanoseconds.
         Result.SUCCESS - the delay has been successfully set.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master is busy transferring.
-        Result.VALUE_ROUNDED - the delay value has been approximated as the closest supported value.
+        Result.VALUE_ROUNDED - the delay value has been approximated as the
+        closest supported value.
         '''
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<BI')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SET_DELAY_BETWEEN_SS, 0, self._handle)
+        cmd += sdata.pack(port, delay)
 
-    def get_delay_between_ss(self, port, delay_between_ss):
+        sdata = struct.Struct('<I')
+        rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size)
+        check_response(cmd, rsp)
+        return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
+
+    def get_delay_between_ss(self, port, delay):
         '''
         Retrieves  current  setting  for  minimum  delay between release of an SS line and assertion of another SS line.
         handle - a handle to the DLN-series adapter.
@@ -404,21 +413,30 @@ class SpiMaster:
         '''
         raise Exception("Not implemented")
 
-    def set_delay_after_ss(self, port, delay_after_ss, actual_delay_after_ss):
+    def set_delay_after_ss(self, port, delay):
         '''
-        Sets a delay duration between assertion of an SS line and first data frame.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be configured.
-        delayAfterSS - the delay value in nanoseconds.
-        actualDelayAfterSS - actual set delay value in nanoseconds.
+        Sets a delay duration between assertion of an SS line and first data
+        frame.
+        port: the number of an SPI master port to be configured;
+        delay: the delay value in nanoseconds.
+        Return: actual set delay value in nanoseconds.
         Result.SUCCESS - the delay has been successfully set.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master is busy transferring.
-        Result.VALUE_ROUNDED - the delay value has been approximated as the closest supported value.
+        Result.VALUE_ROUNDED - the delay value has been approximated as the
+        closest supported value.
         '''
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<BI')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SET_DELAY_AFTER_SS, 0, self._handle)
+        cmd += sdata.pack(port, delay)
 
-    def get_delay_after_ss(self, port, delay_after_ss):
+        sdata = struct.Struct('<I')
+        rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size)
+        check_response(cmd, rsp)
+        return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
+
+    def get_delay_after_ss(self, port, delay):
         '''
         Retrieves current setting for minimum delay between assertion of an SS line and first data frame.
         handle - a handle to the DLN-series adapter.
@@ -429,19 +447,28 @@ class SpiMaster:
         '''
         raise Exception("Not implemented")
 
-    def set_delay_between_frames(self, port, delay_between_frames, actual_delay_between_frames):
+    def set_delay_between_frames(self, port, delay):
         '''
-        Sets  a  delay  between  data  frames exchanged with a single slave device.
-        handle - a handle to the DLN-series adapter.
-        port - the number of an SPI master port to be configured.
-        delayBetweenFrames - the delay value in nanoseconds.
-        actualDelayBetweenFrames - actual set delay value in nanoseconds.
+        Sets a delay between data frames exchanged with a single slave device.
+        port: the number of an SPI master port to be configured;
+        delay: the delay value in nanoseconds.
+        Return: actual set delay value in nanoseconds.
         Result.SUCCESS - the delay has been successfully set.
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.BUSY - the SPI master is busy transferring.
-        Result.VALUE_ROUNDED - the delay value has been approximated as the closest supported value.
+        Result.VALUE_ROUNDED - the delay value has been approximated as the
+        closest supported value.
         '''
-        raise Exception("Not implemented")
+        sdata = struct.Struct('<BI')
+        cmd = build_msg_header(StructBasicCmd.size + sdata.size,
+                               _MSG_ID_SET_DELAY_BETWEEN_FRAMES,
+                               0, self._handle)
+        cmd += sdata.pack(port, delay)
+
+        sdata = struct.Struct('<I')
+        rsp = self._client.transaction(cmd, StructBasicRsp.size + sdata.size)
+        check_response(cmd, rsp)
+        return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
 
     def get_delay_between_frames(self, port, delay_between_frames):
         '''
