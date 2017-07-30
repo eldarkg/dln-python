@@ -23,7 +23,6 @@ import socket
 import struct
 
 from .common import *
-from .device import Device
 
 
 DEFAULT_SERVER_PORT = 9656
@@ -109,11 +108,9 @@ class Client:
         sdata = struct.Struct('<I')
         rsp = self.transaction(cmd, StructBasicRsp.size + sdata.size)
         check_response(cmd, rsp)
-        handle = sdata.unpack_from(rsp, StructBasicRsp.size)[0]
+        return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
 
-        return Device(self, handle)
-
-    def open_device(self, number) -> Device:
+    def open_device(self, number):
         '''
         Opens the specified device corresponding to the specified number.
         number: a number of the device to be opened.
@@ -126,22 +123,29 @@ class Client:
         '''
         return self._open_device_common(_DEVICE_FILTER_NUMBER, number)
 
-    def open_device_by_sn(self, sn) -> Device:
+    def open_device_by_sn(self, sn):
         '''
         Opens a specified defined by its serial number.
         sn: a serial number of the DLN device.
         '''
         return self._open_device_common(_DEVICE_FILTER_SN, sn)
 
-    def open_device_by_id(self, id) -> Device:
+    def open_device_by_id(self, id):
         '''
         Opens a specified defined by its ID number.
         id: an ID number of the DLN device.
         '''
         return self._open_device_common(_DEVICE_FILTER_ID, id)
 
-    def open_device_by_hw_type(self, hw_type) -> Device:
+    def open_device_by_hw_type(self, hw_type):
         return self._open_device_common(_DEVICE_FILTER_HW_TYPE, hw_type)
+
+    def close_handle(self, handle):
+        '''
+        Closes the handle to an opened DLN device (self, stream).
+        handle: a handle to the DLN device.
+        '''
+        ...
 
     def close_all_handles(self):
         '''

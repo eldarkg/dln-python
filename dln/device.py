@@ -24,7 +24,6 @@ import struct
 from .common import *
 
 
-#class Device(SpiMaster):
 class Device:
     def __init__(self, client, handle):
         self._client = client
@@ -32,13 +31,6 @@ class Device:
 
     def get_handle(self):
         return self._handle
-
-    def close_handle(self):
-        '''
-        Closes the handle to an opened DLN device (self, stream).
-        \param handle - A handle to the DLN device.
-        '''
-        ...
 
     def get_version(self):
         '''

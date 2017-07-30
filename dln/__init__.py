@@ -15,3 +15,5 @@
 
 
 from .client import *
+from .device import Device
+from .spimaster import SpiMaster
