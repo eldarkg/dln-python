@@ -113,11 +113,12 @@ class Client:
 
     def _open_device_common(self, filter, param):
         sdata = struct.Struct('<HIIII')
+        # undocumented
         cmd = build_msg_header(StructBasicCmd.size + sdata.size,
-                               MSG_ID_OPEN_DEVICE, 0, HANDLE_ALL_DEVICES)
+                               MSG_ID_OPEN_DEVICE_EX, 0, HANDLE_ALL_DEVICES)
         cmd += sdata.pack(filter, param, param, param, param)
 
-        sdata = struct.Struct('<I')
+        sdata = struct.Struct('<IH')    # undocumented
         rsp = self.transaction(cmd, StructBasicRsp.size + sdata.size)
         check_response(cmd, rsp)
         return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
