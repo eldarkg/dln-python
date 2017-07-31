@@ -309,7 +309,7 @@ class SpiMaster:
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.DISABLED - the SPI master port is disabled.
         '''
-        return self.read_write_ex(port, buffer, self.ATTR_LEAVE_SS_LOW)
+        return self.read_write_ex(port, buffer, self.ATTR_RELEASE_SS)
 
     def read_write_ex(self, port, buffer, attr):
         self._check_transfer_size(len(buffer))
@@ -329,7 +329,7 @@ class SpiMaster:
         return rsp[StructBasicRsp.size + sdata.size:]
 
     def write(self, port, buffer):
-        self.write_ex(port, buffer, self.ATTR_LEAVE_SS_LOW)
+        self.write_ex(port, buffer, self.ATTR_RELEASE_SS)
 
     def write_ex(self, port, buffer, attr):
         self._check_transfer_size(len(buffer))
@@ -345,7 +345,7 @@ class SpiMaster:
         check_response(cmd, rsp)
 
     def read(self, port, size):
-        return self.read_ex(port, size, self.ATTR_LEAVE_SS_LOW)
+        return self.read_ex(port, size, self.ATTR_RELEASE_SS)
 
     def read_ex(self, port, size, attr):
         self._check_transfer_size(size)
@@ -382,7 +382,7 @@ class SpiMaster:
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.DISABLED - the SPI master port is disabled.
         '''
-        return self.read_write_ex_16(port, frames, self.ATTR_LEAVE_SS_LOW)
+        return self.read_write_ex_16(port, frames, self.ATTR_RELEASE_SS)
 
     def read_write_ex_16(self, port, frames, attr):
         buf = self._convert_frames_to_bytes(frames)
@@ -390,17 +390,17 @@ class SpiMaster:
         return self._convert_bytes_to_frames(buf)
 
     def write_16(self, port, frames):
-        self.write_ex_16(port, frames, self.ATTR_LEAVE_SS_LOW)
+        self.write_ex_16(port, frames, self.ATTR_RELEASE_SS)
 
     def write_ex_16(self, port, frames, attr):
         buf = self._convert_frames_to_bytes(frames)
-        self.write_ex(port, buf, self.ATTR_LEAVE_SS_LOW)
+        self.write_ex(port, buf, self.ATTR_RELEASE_SS)
 
     def read_16(self, port, size):
-        return self.read_ex_16(port, size, self.ATTR_LEAVE_SS_LOW)
+        return self.read_ex_16(port, size, self.ATTR_RELEASE_SS)
 
     def read_ex_16(self, port, size, attr):
-        buf = self.read_ex(port, size, self.ATTR_LEAVE_SS_LOW)
+        buf = self.read_ex(port, size, self.ATTR_RELEASE_SS)
         return self._convert_bytes_to_frames(buf)
 
     def set_delay_between_ss(self, port, delay):
