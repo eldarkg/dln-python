@@ -363,6 +363,12 @@ class SpiMaster:
         #TODO read from size field
         return rsp[StructBasicRsp.size + sdata.size:]
 
+    def _convert_frames_to_bytes(self, frames):
+        return bytes(array('H', frames))
+
+    def _convert_bytes_to_frames(self, buffer):
+        return struct.unpack('<' + str(len(buffer) // 2) + 'H', buffer)
+
     def read_write_16(self, port, frames):
         '''
         Sends and receives 2-byte frames via SPI.
@@ -376,8 +382,26 @@ class SpiMaster:
         Result.INVALID_PORT_NUMBER - the port number is out of range.
         Result.DISABLED - the SPI master port is disabled.
         '''
-        buffer = bytes(array('H', frames))
-        return self.read_write(port, buffer)
+        return self.read_write_ex_16(port, frames, self.ATTR_LEAVE_SS_LOW)
+
+    def read_write_ex_16(self, port, frames, attr):
+        buf = self._convert_frames_to_bytes(frames)
+        buf = self.read_write_ex(port, buf, attr)
+        return self._convert_bytes_to_frames(buf)
+
+    def write_16(self, port, frames):
+        self.write_ex_16(port, frames, self.ATTR_LEAVE_SS_LOW)
+
+    def write_ex_16(self, port, frames, attr):
+        buf = self._convert_frames_to_bytes(frames)
+        self.write_ex(port, buf, self.ATTR_LEAVE_SS_LOW)
+
+    def read_16(self, port, size):
+        return self.read_ex_16(port, size, self.ATTR_LEAVE_SS_LOW)
+
+    def read_ex_16(self, port, size, attr):
+        buf = self.read_ex(port, size, self.ATTR_LEAVE_SS_LOW)
+        return self._convert_bytes_to_frames(buf)
 
     def set_delay_between_ss(self, port, delay):
         '''
