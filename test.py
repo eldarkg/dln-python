@@ -15,7 +15,7 @@ print(spim.get_port_count())
 
 spim.set_frequency(0, 2000000)
 spim.set_frame_size(0, SpiMaster.FRAME_SIZE_16)
-spim.set_mode(0, SpiMaster.MODE_CPHA_1 | SpiMaster.MODE_CPOL_1)
+spim.set_mode(0, SpiMaster.MODE_CPHA_0 | SpiMaster.MODE_CPOL_1)
 spim.ss_between_frames_enable(0)
 print(spim.set_delay_between_frames(0, 0))
 print(spim.set_delay_after_ss(0, 500))
