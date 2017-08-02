@@ -27,7 +27,7 @@ from .common import *
 
 DEFAULT_SERVER_PORT = 9656
 
-_SRV_UUID = b'b04d5faf8c94d8478f6e393d99d88200'
+_SERVER_UUID_LEN = 16
 
 _DEVICE_FILTER_NUMBER = 1 << 0
 _DEVICE_FILTER_HW_TYPE = 1 << 1
@@ -68,13 +68,10 @@ class Client:
         cmd = build_msg_header(StructBasicCmd.size, MSG_ID_GET_SRV_UUID,
                                0, HANDLE_ALL_DEVICES)
 
-        rsp = self.transaction(cmd, StructBasicRsp.size + len(_SRV_UUID))
+        rsp = self.transaction(cmd, StructBasicRsp.size + _SERVER_UUID_LEN)
         check_response(cmd, rsp)
 
-        uuid = rsp[StructBasicRsp.size:]
-        if uuid == _SRV_UUID:
-            self.disconnect()
-            raise Exception('Server UUID is incorrect')
+        self._uuid = rsp[StructBasicRsp.size:]
 
     def disconnect(self):
         '''
