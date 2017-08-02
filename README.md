@@ -1,5 +1,3 @@
-# Not ready for usage!!!
-
 ### Description
 Diolan DLN-Series Interface Adapters client Python API.
 About adapters: [link to description](https://diolan.com/interface-adapters).
