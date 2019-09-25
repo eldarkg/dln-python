@@ -53,7 +53,7 @@ class Client:
         '''
         raise Exception("Not implemented")
 
-    def connect(self, host, port):
+    def connect(self, host, port, timeout):
         '''
         Establishes the connection to the DLN server.
         host: a server to establish the connection to;
@@ -64,6 +64,7 @@ class Client:
         '''
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.connect((host, port))
+        self._timeout = timeout
 
         cmd = build_msg_header(StructBasicCmd.size, MSG_ID_GET_SRV_UUID,
                                0, HANDLE_ALL_DEVICES)
@@ -181,7 +182,11 @@ class Client:
         Return: a response.
         '''
         self._socket.sendall(cmd)
-        return self._socket.recv(size)
+
+        self._socket.settimeout(self._timeout)
+        recv = self._socket.recv(size)
+        self._socket.settimeout(None)
+        return recv
 
     def get_message(self, handle, size) -> bytearray:
         '''
@@ -191,6 +196,8 @@ class Client:
         Return: a message.
         '''
         #TODO check in queue ?!
+        self._socket.settimeout(self._timeout)
         msg = self._socket.recv(size)
+        self._socket.settimeout(None)
         #TODO check handle. If handle not equal move msg to queue ?!
         return msg
