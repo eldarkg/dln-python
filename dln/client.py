@@ -111,12 +111,13 @@ class Client:
 
     def _open_device_common(self, filter, param):
         sdata = struct.Struct('<HIIII')
-        # undocumented
+        # FIXME undocumented
         cmd = build_msg_header(StructBasicCmd.size + sdata.size,
                                MSG_ID_OPEN_DEVICE_EX, 0, HANDLE_ALL_DEVICES)
         cmd += sdata.pack(filter, param, param, param, param)
 
-        sdata = struct.Struct('<IH')    # undocumented
+        # FIXME undocumented
+        sdata = struct.Struct('<HHH')
         rsp = self.transaction(cmd, StructBasicRsp.size + sdata.size)
         check_response(cmd, rsp)
         return sdata.unpack_from(rsp, StructBasicRsp.size)[0]
@@ -126,6 +127,7 @@ class Client:
         Opens the specified device corresponding to the specified number.
         number: a number of the device to be opened.
         Return: a handle to the DLN device.
+        # FIXME ???
         Result.SUCCESS - The device was successfully opened;
         Result.NOT_CONNECTED - The library was not connected to any server;
         Result.MEMORY_ERROR - Not enough memory to process this command;
