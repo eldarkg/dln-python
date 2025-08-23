@@ -1,3 +1,5 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/eldarkg/dln-python)
+
 ### Description
 Diolan DLN-Series Interface Adapters client Python API.
 About adapters: [link to description](https://diolan.com/interface-adapters).
